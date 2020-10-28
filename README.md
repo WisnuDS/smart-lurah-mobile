@@ -11,4 +11,4 @@ Smart Lurah adalah aplikasi yang dapat memudahkan masyarakat kelurahan dalam men
 
 ## Progress
 1. 28 November 2020 - Membuat Login Page dari aplikasi
-![Screenshoot Login](assets/images/ss_login.jpg)
+![Screenshoot Login](assets/screenshoot/ss_login.jpg)
