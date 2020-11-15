@@ -1,15 +1,9 @@
 import 'package:SmartLurah/Animation/FadeAnimation.dart';
-import 'package:SmartLurah/ragister.dart';
-import 'package:SmartLurah/rootWidget.dart';
+import 'package:SmartLurah/registerPicture.dart';
+import 'package:SmartLurah/takePicture.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 
-void main() => runApp(MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
-    ));
-
-class HomePage extends StatelessWidget {
+class RegisterField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +67,7 @@ class HomePage extends StatelessWidget {
                               margin: EdgeInsets.only(top: 50),
                               child: Center(
                                 child: Text(
-                                  "Login",
+                                  "Registration",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 40,
@@ -86,13 +80,12 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(30.0),
+                  padding: EdgeInsets.fromLTRB(30,0,30,30),
                   child: Column(
                     children: <Widget>[
                       FadeAnimation(
                           1.8,
                           Container(
-                            padding: EdgeInsets.all(5),
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(10),
@@ -113,7 +106,21 @@ class HomePage extends StatelessWidget {
                                   child: TextField(
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Email or Phone number",
+                                        hintText: "Username",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[400])),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                          bottom: BorderSide(
+                                              color: Colors.grey[100]))),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        hintText: "Password",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
                                   ),
@@ -123,7 +130,7 @@ class HomePage extends StatelessWidget {
                                   child: TextField(
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Password",
+                                        hintText: "Address",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
                                   ),
@@ -136,7 +143,7 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>RootWidget()))
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterPicture(state: "KTP",)))
                         },
                         style: ElevatedButton.styleFrom(
                             primary: Colors.white.withOpacity(0),
@@ -153,7 +160,7 @@ class HomePage extends StatelessWidget {
                                   ])),
                               child: Center(
                                 child: Text(
-                                  "Login",
+                                  "Next",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -161,64 +168,6 @@ class HomePage extends StatelessWidget {
                               ),
                             )),
                       ),
-                      FadeAnimation(1.8, Container(
-                          padding: EdgeInsets.all(7.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              SignInButton(
-                                Buttons.Apple,
-                                mini: true,
-                                onPressed: () {
-                                  
-                                },
-                              ),
-                              SignInButton(
-                                Buttons.GitHub,
-                                mini: true,
-                                onPressed: () {
-                                  
-                                },
-                              ),
-                              SignInButton(
-                                Buttons.Facebook,
-                                mini: true,
-                                onPressed: () {
-                                  
-                                },
-                              ),
-                              SignInButtonBuilder(
-                                icon: Icons.email,
-                                text: "Ignored for mini button",
-                                mini: true,
-                                onPressed: () {
-                                  
-                                },
-                                backgroundColor: Colors.cyan,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                          onPressed: () => {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RegisterPage()))
-                              },
-                          child: FadeAnimation(
-                              1.5,
-                              Text("Don't have account? Sign up here",
-                                  style: TextStyle(
-                                      color:
-                                          Color.fromRGBO(143, 148, 251, 1)))),
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.white.withOpacity(0),
-                              shadowColor: Colors.white.withOpacity(0))),
                     ],
                   ),
                 )
