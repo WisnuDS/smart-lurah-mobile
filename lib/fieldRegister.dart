@@ -1,9 +1,46 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:SmartLurah/Animation/FadeAnimation.dart';
 import 'package:SmartLurah/registerPicture.dart';
 import 'package:SmartLurah/takePicture.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'status.dart';
+
+Future<Status> createUser(String name, int password) async {
+  final http.Response response = await http.post(
+    'https://0165da645752.ngrok.io/api/users/',
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, dynamic>{
+      'telegram_id': password,
+      'name' : name,
+      'status' : 'unverified',
+      'url_ktp_photo' : "Hahahah",
+      'url_self_photo' : "Hahahah"
+    }),
+  );
+
+  if (response.statusCode == 201) {
+    return Status(status : true);
+  } else {
+    print(response.body);
+    throw Exception('Failed to create album.');
+  }
+}
+
 
 class RegisterField extends StatelessWidget {
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  Future<Status> status;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,6 +141,7 @@ class RegisterField extends StatelessWidget {
                                           bottom: BorderSide(
                                               color: Colors.grey[100]))),
                                   child: TextField(
+                                    controller: usernameController,
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
                                         hintText: "Username",
@@ -118,23 +156,14 @@ class RegisterField extends StatelessWidget {
                                           bottom: BorderSide(
                                               color: Colors.grey[100]))),
                                   child: TextField(
+                                    controller: passwordController,
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Password",
+                                        hintText: "PIN",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
                                   ),
                                 ),
-                                Container(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                        hintText: "Address",
-                                        hintStyle:
-                                            TextStyle(color: Colors.grey[400])),
-                                  ),
-                                )
                               ],
                             ),
                           )),
@@ -143,7 +172,13 @@ class RegisterField extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterPicture(state: "KTP",)))
+                          createUser(usernameController.text, int.parse(passwordController.text)).then((value) => {
+                            if (value.status){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>RegisterPicture(state: "KTP",)))    
+                            }
+                          }).catchError((onError) => {
+                            print("error")
+                          })
                         },
                         style: ElevatedButton.styleFrom(
                             primary: Colors.white.withOpacity(0),

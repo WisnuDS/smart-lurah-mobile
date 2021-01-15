@@ -1,15 +1,71 @@
+import 'dart:convert';
+
 import 'package:SmartLurah/Animation/FadeAnimation.dart';
 import 'package:SmartLurah/ragister.dart';
 import 'package:SmartLurah/rootWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:http/http.dart' as http;
+import 'status.dart';
+
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     ));
 
-class HomePage extends StatelessWidget {
+  class HomePage extends StatelessWidget {
+    final usernameController = TextEditingController();
+    final pinController = TextEditingController();
+
+    Future<UserStatus> createUser(String name, int password) async {
+    final http.Response response = await http.post(
+      'https://e7a06d93c701.ngrok.io/api/login/member/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'pin': password,
+        'username' : name,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return UserStatus.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.body);
+      throw Exception('Failed to create album.');
+    }
+  }
+
+  showAlertDialog(BuildContext context) {
+
+  // set up the button
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {
+      Navigator.of(context, rootNavigator: true).pop('dialog');
+    },
+  );
+
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Opps"),
+    content: Text("Your credential not match any record"),
+    actions: [
+      okButton,
+    ],
+  );
+
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,9 +167,10 @@ class HomePage extends StatelessWidget {
                                           bottom: BorderSide(
                                               color: Colors.grey[100]))),
                                   child: TextField(
+                                    controller: usernameController,
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Email or Phone number",
+                                        hintText: "Username",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
                                   ),
@@ -121,9 +178,10 @@ class HomePage extends StatelessWidget {
                                 Container(
                                   padding: EdgeInsets.all(8.0),
                                   child: TextField(
+                                    controller: pinController,
                                     decoration: InputDecoration(
                                         border: InputBorder.none,
-                                        hintText: "Password",
+                                        hintText: "PIN",
                                         hintStyle:
                                             TextStyle(color: Colors.grey[400])),
                                   ),
@@ -136,7 +194,13 @@ class HomePage extends StatelessWidget {
                       ),
                       ElevatedButton(
                         onPressed: () => {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>RootWidget()))
+                          createUser(usernameController.text, int.parse(pinController.text)).then((value) => {
+                            if(value.status){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>RootWidget(id: value.id,)))
+                            }else{
+                              showAlertDialog(context)
+                            }
+                          })
                         },
                         style: ElevatedButton.styleFrom(
                             primary: Colors.white.withOpacity(0),
